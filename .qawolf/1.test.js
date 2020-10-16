@@ -1,6 +1,7 @@
 /**
  * @jest-environment node
  */
+
 const dotenv = require("dotenv");
 dotenv.config();
 const { devices } = require("playwright");
