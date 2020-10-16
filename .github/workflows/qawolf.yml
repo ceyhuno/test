@@ -1,0 +1,34 @@
+name: qawolf
+on:
+  push:
+    branches: "*"
+  schedule:
+    - cron: "*/15 * * * *"
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+
+      - uses: microsoft/playwright-github-action@v1
+
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - run: npm install
+
+      - run: npx qawolf test --headless
+        env:
+          APP_KEY: ${{ secrets.APP_KEY }}
+          APP_SECRET: ${{ secrets.APP_SECRET }}
+          PAGE_URL: ${{ secrets.PAGE_URL }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          UNWANTED: ${{ secrets.UNWANTED }}
